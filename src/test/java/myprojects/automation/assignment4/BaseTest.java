@@ -8,6 +8,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -54,7 +56,7 @@ public abstract class BaseTest {
      */
     private String getResource(String resourceName) {
         try {
-           return Paths.get(BaseTest.class.getResource(resourceName).toURI()).toFile().getPath();
+            return Paths.get(BaseTest.class.getResource(resourceName).toURI()).toFile().getPath();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -69,8 +71,8 @@ public abstract class BaseTest {
      *
      */
     @BeforeClass
-    // TODO use parameters from pom.xml to pass required browser type
-    public void setUp(String browser ) {
+    @Parameters("browser")
+    public void setUp(String browser) {
         driver = new EventFiringWebDriver(getDriver(browser));
         driver.register(new EventHandler());
 
@@ -81,6 +83,10 @@ public abstract class BaseTest {
         actions = new GeneralActions(driver);
     }
 
+    @DataProvider(name = "authorization")
+    public Object[][] getData(){
+        return new Object[][]{{"webinar.test@gmail.com", "Xcg7299bnSmMuRLp9ITw"}};
+    }
     /**
      * Closes driver instance after test class execution.
      */
